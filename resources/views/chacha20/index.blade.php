@@ -223,7 +223,7 @@
         .state-matrix { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 24px; }
         .state-cell {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;
-            padding: 16px 8px; text-align: center; color: var(--text-main);
+            padding: 24px 8px 16px; text-align: center; color: var(--text-main);
             font-family: 'Courier New', Courier, monospace; font-size: 14px; font-weight: bold;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
         }
@@ -235,9 +235,17 @@
 
         /* Legend Colors */
         .legend-constant { border-bottom: 3px solid #888; }
-        .legend-key { border-bottom: 3px solid #46d369; }
+        .legend-key { border-bottom: 3px solid #e50914; }
         .legend-counter { border-bottom: 3px solid #3b82f6; }
-        .legend-nonce { border-bottom: 3px solid #f59e0b; }
+        .legend-nonce { border-bottom: 3px solid #46d369; }
+
+        /* Diffusion Dots */
+        .color-dots { display: flex; gap: 4px; justify-content: center; position: absolute; top: 6px; left: 0; right: 0; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; box-shadow: 0 0 4px rgba(0,0,0,0.5); }
+        .dot-constant { background: #888; }
+        .dot-key { background: #e50914; box-shadow: 0 0 6px #e50914; }
+        .dot-counter { background: #3b82f6; box-shadow: 0 0 6px #3b82f6; }
+        .dot-nonce { background: #46d369; box-shadow: 0 0 6px #46d369; }
 
         /* Interactive Narration Panel */
         .narration-panel {
@@ -250,6 +258,30 @@
         .arx-box { background: rgba(0,0,0,0.5); border-radius: 8px; padding: 16px; margin-bottom: 20px; border-left: 4px solid var(--primary); }
         .arx-title { font-weight: 600; margin-bottom: 8px; font-size: 14px; }
         .arx-desc { font-size: 13px; color: var(--text-muted); }
+
+        /* ARX Micro-Step Visualizer */
+        .arx-micro { background: rgba(0,0,0,0.5); border-radius: 10px; padding: 16px; margin-bottom: 16px; border: 1px solid var(--border-glass); }
+        .arx-micro-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .arx-micro-nav { display: flex; gap: 6px; align-items: center; }
+        .arx-micro-nav button { background: rgba(255,255,255,0.08); border: 1px solid var(--border-glass); color: var(--text-muted); border-radius: 4px; padding: 4px 10px; cursor: pointer; font-size: 12px; transition: all .2s; }
+        .arx-micro-nav button:hover:not(:disabled) { background: rgba(255,255,255,0.15); color: white; }
+        .arx-micro-nav button:disabled { opacity: .3; cursor: not-allowed; }
+        .arx-step-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.5px; }
+        .arx-step-badge.add { background: rgba(0,200,255,0.15); color: #00c8ff; border: 1px solid rgba(0,200,255,0.3); }
+        .arx-step-badge.xor { background: rgba(255,100,200,0.15); color: #ff64c8; border: 1px solid rgba(255,100,200,0.3); }
+        .arx-step-badge.rot { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.3); }
+        .arx-op-desc { font-size: 13px; font-weight: 600; color: white; font-family: 'Courier New', monospace; margin-bottom: 10px; }
+        .arx-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
+        .arx-row-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+        .arx-hex-val { font-family: 'Courier New', monospace; font-size: 13px; color: white; font-weight: 600; }
+        .arx-bin-row { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 1px; word-break: break-all; padding: 4px 6px; border-radius: 4px; background: rgba(0,0,0,0.4); }
+        .arx-bin-row.src { color: #888; }
+        .arx-bin-row.result { color: #4ade80; }
+        .arx-separator { text-align: center; font-size: 16px; font-weight: 700; padding: 2px 0; }
+        .arx-separator.add-color { color: #00c8ff; }
+        .arx-separator.xor-color { color: #ff64c8; }
+        .arx-separator.rot-color { color: #ffb400; }
+        .arx-result-line { border-top: 1px dashed rgba(255,255,255,0.15); padding-top: 6px; margin-top: 2px; }
 
         .round-nav-modal { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
         .round-dot {
@@ -265,6 +297,62 @@
             border-radius: 50%; border-top-color: white; animation: spin 1s linear infinite;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* File Upload Drop Zone */
+        .drop-zone {
+            border: 2px dashed rgba(255,255,255,0.15); border-radius: 12px;
+            padding: 40px 20px; text-align: center; cursor: pointer;
+            transition: all 0.3s; background: rgba(0,0,0,0.2);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 200px; position: relative;
+        }
+        .drop-zone:hover { border-color: var(--primary); background: rgba(229,9,20,0.05); }
+        .drop-zone.dragover { border-color: var(--primary); background: rgba(229,9,20,0.1); transform: scale(1.02); }
+        .drop-zone-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.6; }
+        .drop-zone-text { color: var(--text-muted); font-size: 14px; }
+        .drop-zone-text strong { color: var(--primary); }
+        .drop-zone input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+
+        .file-info-card {
+            background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass);
+            border-radius: 10px; padding: 16px 20px; display: flex; align-items: center; gap: 16px;
+        }
+        .file-info-icon { font-size: 36px; }
+        .file-info-details { flex: 1; }
+        .file-info-name { font-weight: 600; font-size: 15px; word-break: break-all; }
+        .file-info-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+        .file-remove { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 20px; padding: 4px 8px; transition: opacity .2s; }
+        .file-remove:hover { opacity: 0.7; }
+
+        .download-card {
+            background: rgba(229,9,20,0.08); border: 1px solid rgba(229,9,20,0.3);
+            border-radius: 12px; padding: 24px; text-align: center;
+        }
+        .download-card .download-icon { font-size: 48px; margin-bottom: 12px; }
+        .download-card .download-filename { font-weight: 600; font-size: 16px; margin-bottom: 4px; word-break: break-all; }
+        .download-card .download-size { font-size: 13px; color: var(--text-muted); margin-bottom: 16px; }
+        .btn-download {
+            background: var(--primary); color: white; border: none; padding: 14px 32px;
+            border-radius: 8px; font-weight: 600; font-size: 15px; cursor: pointer;
+            transition: all .2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+        .key-display {
+            background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 8px;
+            padding: 12px 16px; margin-top: 16px; text-align: left;
+        }
+        .key-display label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 2px; }
+        .key-display .key-value { font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all; color: #fbbf24; }
+
+        .file-sub-mode { display: flex; gap: 8px; margin-bottom: 16px; }
+        .file-sub-tab {
+            flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: 500;
+            border-radius: 6px; cursor: pointer; transition: all .2s;
+            background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid transparent;
+        }
+        .file-sub-tab:hover { color: white; background: rgba(255,255,255,0.1); }
+        .file-sub-tab.active { background: rgba(229,9,20,0.2); color: white; border-color: var(--primary); }
     </style>
 </head>
 <body x-data="chacha20App()" x-init="init()" :style="showModal ? 'overflow: hidden;' : ''">
@@ -278,11 +366,19 @@
 
     <!-- Navbar -->
     <nav class="navbar">
-        <a href="#" class="logo"><span>Naka</span>motoX</a>
-        <div class="status-badge" :class="serviceStatus === 'Online' ? 'online' : 'offline'">
-            <span x-show="serviceStatus === 'Online'">🟢</span>
-            <span x-show="serviceStatus !== 'Online'">🔴</span>
-            Engine: <span x-text="serviceStatus">Checking...</span>
+        <a href="{{ route('chacha20.index') }}" class="logo"><span>Naka</span>motoX</a>
+        <div style="display:flex; align-items:center; gap: 16px;">
+            <a href="{{ route('caesar.index') }}" style="color:var(--text-main); text-decoration:none; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-main)'">
+                <span>🏛️</span> Caesar Cipher
+            </a>
+            <a href="{{ route('chacha20.learn') }}" style="color:var(--text-main); text-decoration:none; font-weight:600; font-size:14px; display:flex; align-items:center; gap:6px; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-main)'">
+                <span>📖</span> The Story of ChaCha20
+            </a>
+            <div class="status-badge" :class="serviceStatus === 'Online' ? 'online' : 'offline'">
+                <span x-show="serviceStatus === 'Online'">🟢</span>
+                <span x-show="serviceStatus !== 'Online'">🔴</span>
+                Engine: <span x-text="serviceStatus">Checking...</span>
+            </div>
         </div>
     </nav>
 
@@ -303,7 +399,7 @@
                         <span>INPUT DATA</span>
                     </div>
 
-                    <div class="form-group" x-show="mode !== 'decrypt'" style="height: 100%;">
+                    <div class="form-group" x-show="mode === 'encrypt' || mode === 'steps'" style="height: 100%;">
                         <label>Plaintext</label>
                         <span class="educational-text">Masukkan teks rahasia yang ingin diproses.</span>
                         <textarea class="full-height" x-model="plaintext" placeholder="Contoh: The quick brown fox jumps over the lazy dog."></textarea>
@@ -313,6 +409,33 @@
                         <label>Ciphertext (Hex)</label>
                         <span class="educational-text">Masukkan data yang sudah terenkripsi.</span>
                         <textarea class="mono-font full-height" x-model="ciphertextInput" placeholder="Contoh: a1b2c3d4e5f6..."></textarea>
+                    </div>
+
+                    <!-- File Mode: Drop Zone -->
+                    <div x-show="mode === 'file'" style="height: 100%; display: flex; flex-direction: column;">
+                        <label x-text="fileMode === 'encrypt' ? 'File untuk Dienkripsi' : 'File Terenkripsi untuk Didekripsi'"></label>
+                        <span class="educational-text" x-text="fileMode === 'encrypt' ? 'Drag & drop atau pilih file (maks 5 MB).' : 'Upload file terenkripsi yang ingin didekripsi.'"></span>
+
+                        <!-- Drop Zone (saat belum ada file) -->
+                        <div x-show="!selectedFile" class="drop-zone" :class="{'dragover': isDragging}"
+                             @dragover.prevent="isDragging = true"
+                             @dragleave.prevent="isDragging = false"
+                             @drop.prevent="isDragging = false; handleFileDrop($event)">
+                            <div class="drop-zone-icon">📁</div>
+                            <div class="drop-zone-text">Drag & drop file di sini<br>atau <strong>klik untuk browse</strong></div>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Maks. 5 MB</div>
+                            <input type="file" @change="handleFileSelect($event)">
+                        </div>
+
+                        <!-- File Info (saat sudah ada file) -->
+                        <div x-show="selectedFile" class="file-info-card">
+                            <div class="file-info-icon">📄</div>
+                            <div class="file-info-details">
+                                <div class="file-info-name" x-text="selectedFile?.name"></div>
+                                <div class="file-info-meta" x-text="formatFileSize(selectedFile?.size) + ' • ' + (selectedFile?.type || 'unknown type')"></div>
+                            </div>
+                            <button class="file-remove" @click="removeFile()" title="Hapus file">✕</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -333,6 +456,13 @@
                         <div class="mode-tab" :class="{ active: mode === 'encrypt' }" @click="mode = 'encrypt'; resetResult()">Encrypt</div>
                         <div class="mode-tab" :class="{ active: mode === 'decrypt' }" @click="mode = 'decrypt'; resetResult()">Decrypt</div>
                         <div class="mode-tab" :class="{ active: mode === 'steps' }" @click="mode = 'steps'; resetResult()">Visualize</div>
+                        <div class="mode-tab" :class="{ active: mode === 'file' }" @click="mode = 'file'; resetResult()">📁 File</div>
+                    </div>
+
+                    <!-- File sub-mode (encrypt/decrypt) -->
+                    <div x-show="mode === 'file'" class="file-sub-mode">
+                        <div class="file-sub-tab" :class="{active: fileMode === 'encrypt'}" @click="fileMode = 'encrypt'; resetResult(); removeFile()">🔒 Encrypt File</div>
+                        <div class="file-sub-tab" :class="{active: fileMode === 'decrypt'}" @click="fileMode = 'decrypt'; resetResult(); removeFile()">🔓 Decrypt File</div>
                     </div>
 
                     <div class="form-group">
@@ -373,6 +503,8 @@
                         <span x-show="!loading && mode === 'encrypt'">Execute Pipeline →</span>
                         <span x-show="!loading && mode === 'decrypt'">Execute Pipeline →</span>
                         <span x-show="!loading && mode === 'steps'">Buka Visualizer Edukatif 🎥</span>
+                        <span x-show="!loading && mode === 'file' && fileMode === 'encrypt'">🔒 Encrypt File →</span>
+                        <span x-show="!loading && mode === 'file' && fileMode === 'decrypt'">🔓 Decrypt File →</span>
                     </button>
                 </div>
             </div>
@@ -390,13 +522,14 @@
 
                     <div x-show="error" class="result-box error"><strong>Error:</strong> <span x-text="error"></span></div>
 
-                    <div x-show="!result && !stepsData && !error" class="empty-state">
+                    <div x-show="!result && !stepsData && !fileResult && !error" class="empty-state">
                         <svg fill="currentColor" viewBox="0 0 24 24"><path d="M19,3H5C3.89,3 3,3.89 3,5V19C3,20.1 3.9,21 5,21H19C20.1,21 21,20.1 21,19V5C21,3.89 20.1,3 19,3M19,19H5V5H19V19M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z" /></svg>
-                        <p x-show="mode !== 'steps'">Menunggu eksekusi *pipeline*.<br>Hasil akan ditampilkan di sini.</p>
+                        <p x-show="mode !== 'steps' && mode !== 'file'">Menunggu eksekusi *pipeline*.<br>Hasil akan ditampilkan di sini.</p>
                         <p x-show="mode === 'steps'">Klik tombol di kolom tengah untuk membuka jendela visualizer pop-up.</p>
+                        <p x-show="mode === 'file'">Upload file dan klik tombol eksekusi.<br>Hasil download akan muncul di sini.</p>
                     </div>
 
-                    <div x-show="result && mode !== 'steps'" style="flex-grow: 1;">
+                    <div x-show="result && mode !== 'steps' && mode !== 'file'" style="flex-grow: 1;">
                         <template x-if="mode === 'encrypt' && result">
                             <div>
                                 <label>Ciphertext (Hex)</label>
@@ -421,6 +554,36 @@
                         <p style="color: white; font-weight: 500;">Visualizer Berhasil Di-generate!</p>
                         <p style="font-size: 13px; margin-top: 8px;">Jendela pop-up sedang terbuka. Jika Anda tidak sengaja menutupnya, Anda bisa membukanya kembali.</p>
                         <button class="btn btn-outline" style="margin-top: 20px;" @click="showModal = true">Buka Kembali Visualizer</button>
+                    </div>
+
+                    <!-- File Result: Download Card -->
+                    <div x-show="mode === 'file' && fileResult" style="flex-grow: 1;">
+                        <div class="download-card">
+                            <div class="download-icon">✅</div>
+                            <div class="download-filename" x-text="fileResult?.result_filename"></div>
+                            <div class="download-size" x-text="formatFileSize(fileResult?.content_length)"></div>
+                            <button class="btn-download" @click="downloadFileResult()">
+                                ⬇️ Download File
+                            </button>
+                        </div>
+
+                        <!-- Key & Nonce Display (only for encrypt) -->
+                        <template x-if="fileResult?.key_hex">
+                            <div>
+                                <div class="key-display">
+                                    <label>⚠️ SIMPAN KEY & NONCE INI — diperlukan untuk dekripsi!</label>
+                                </div>
+                                <div class="key-display">
+                                    <label>Secret Key (256-bit)</label>
+                                    <div class="key-value" x-text="fileResult.key_hex"></div>
+                                </div>
+                                <div class="key-display" style="margin-top: 8px;">
+                                    <label>Nonce (96-bit)</label>
+                                    <div class="key-value" x-text="fileResult.nonce_hex"></div>
+                                </div>
+                                <button class="btn btn-outline btn-sm" style="margin-top: 12px; width: 100%;" @click="copyFileKeys()">📋 Salin Key & Nonce</button>
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -456,6 +619,11 @@
                                          'legend-counter': currentRound === -1 && idx === 12,
                                          'legend-nonce': currentRound === -1 && idx >= 13 && idx <= 15
                                      }">
+                                    <div class="color-dots" x-show="currentCellColorsArray[idx]">
+                                        <template x-for="c in currentCellColorsArray[idx]" :key="c">
+                                            <div class="dot" :class="'dot-' + c"></div>
+                                        </template>
+                                    </div>
                                     <span class="index" x-text="`[${idx}]`"></span>
                                     <span x-text="word"></span>
                                 </div>
@@ -480,14 +648,65 @@
                     <!-- Teks Penjelasan -->
                     <div class="story-text" x-html="getStoryText()"></div>
 
-                    <!-- Info Box Khusus -->
-                    <div class="arx-box" x-show="currentRound >= 0 && currentRound !== 'final'">
+                    <!-- ARX Micro-Step Visualizer -->
+                    <div x-show="currentMicroSteps.length > 0">
+                        <div class="arx-micro">
+                            <div class="arx-micro-header">
+                                <div class="arx-step-badge" :class="currentMicroOp().toLowerCase()">
+                                    <span x-text="currentMicroOp()"></span>
+                                    <span x-text="getMicroStepGroupLabel()"></span>
+                                </div>
+                                <div class="arx-micro-nav">
+                                    <button @click="prevMicroStep()" :disabled="microStepIdx <= 0">◀</button>
+                                    <span style="font-size:11px;color:var(--text-muted)" x-text="`${microStepIdx+1}/${currentMicroSteps.length}`"></span>
+                                    <button @click="nextMicroStep()" :disabled="microStepIdx >= currentMicroSteps.length - 1">▶</button>
+                                </div>
+                            </div>
+                            <div class="arx-op-desc" x-text="currentMicroSteps[microStepIdx]?.description"></div>
+
+                            <!-- ADD / XOR layout -->
+                            <template x-if="currentMicroOp() !== 'ROT'">
+                                <div>
+                                    <div class="arx-row">
+                                        <div class="arx-row-label">Operand 1 <span class="arx-hex-val" x-text="currentMicroSteps[microStepIdx]?.operand1_hex"></span></div>
+                                        <div class="arx-bin-row src" x-text="currentMicroSteps[microStepIdx]?.operand1_bin"></div>
+                                    </div>
+                                    <div class="arx-separator" :class="currentMicroOp()==='ADD' ? 'add-color' : 'xor-color'" x-text="currentMicroSteps[microStepIdx]?.symbol"></div>
+                                    <div class="arx-row">
+                                        <div class="arx-row-label">Operand 2 <span class="arx-hex-val" x-text="currentMicroSteps[microStepIdx]?.operand2_hex"></span></div>
+                                        <div class="arx-bin-row src" x-text="currentMicroSteps[microStepIdx]?.operand2_bin"></div>
+                                    </div>
+                                    <div class="arx-separator" style="color:var(--text-muted)">=</div>
+                                    <div class="arx-row arx-result-line">
+                                        <div class="arx-row-label">Hasil <span class="arx-hex-val" style="color:#4ade80" x-text="currentMicroSteps[microStepIdx]?.result_hex"></span></div>
+                                        <div class="arx-bin-row result" x-text="currentMicroSteps[microStepIdx]?.result_bin"></div>
+                                    </div>
+                                </div>
+                            </template>
+
+                            <!-- ROT layout -->
+                            <template x-if="currentMicroOp() === 'ROT'">
+                                <div>
+                                    <div class="arx-row">
+                                        <div class="arx-row-label">Sebelum diputar <span class="arx-hex-val" x-text="currentMicroSteps[microStepIdx]?.operand1_hex"></span></div>
+                                        <div class="arx-bin-row src" x-text="currentMicroSteps[microStepIdx]?.operand1_bin"></div>
+                                    </div>
+                                    <div class="arx-separator rot-color" x-text="'<<< ' + (currentMicroSteps[microStepIdx]?.shift ?? '')"></div>
+                                    <div class="arx-row arx-result-line">
+                                        <div class="arx-row-label">Setelah diputar <span class="arx-hex-val" style="color:#4ade80" x-text="currentMicroSteps[microStepIdx]?.result_hex"></span></div>
+                                        <div class="arx-bin-row result" x-text="currentMicroSteps[microStepIdx]?.result_bin"></div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Static fallback for non-QR steps -->
+                    <div class="arx-box" x-show="currentMicroSteps.length === 0 && currentRound >= 0 && currentRound !== 'final'">
                         <div class="arx-title">⚡ Operasi Inti: ARX</div>
                         <div class="arx-desc">
-                            Sel yang <strong>menyala merah</strong> di sebelah kiri sedang dimodifikasi dengan operasi:<br>
-                            1. <strong>Addition</strong> (Penambahan)<br>
-                            2. <strong>XOR</strong> (Exclusive OR)<br>
-                            3. <strong>Rotation</strong> (Pergeseran bit)
+                            Ronde ini terdiri dari 4 Quarter Round.<br>
+                            Klik pada Quarter Round individual (tombol Maju) untuk melihat detail setiap operasi ARX.
                         </div>
                     </div>
 
@@ -535,12 +754,21 @@ function chacha20App() {
         result: null,
         stepsData: null,
 
+        // File mode state
+        fileMode: 'encrypt',
+        selectedFile: null,
+        fileResult: null,
+        isDragging: false,
+
         allRounds: [],
         currentRoundIndex: 0,
         currentRound: -1,
         currentStateWords: [],
         currentRoundLabel: '',
         changedIndices: [],
+        currentCellColorsArray: [],
+        currentMicroSteps: [],
+        microStepIdx: 0,
 
         async init() {
             await this.checkService();
@@ -558,6 +786,7 @@ function chacha20App() {
         resetResult() {
             this.result = null;
             this.stepsData = null;
+            this.fileResult = null;
             this.error = null;
         },
 
@@ -581,13 +810,17 @@ function chacha20App() {
             this.error = null;
             this.result = null;
             this.stepsData = null;
+            this.fileResult = null;
 
             try {
                 if (this.mode === 'encrypt') await this.doEncrypt();
                 else if (this.mode === 'decrypt') await this.doDecrypt();
-                else {
+                else if (this.mode === 'file') {
+                    if (this.fileMode === 'encrypt') await this.doFileEncrypt();
+                    else await this.doFileDecrypt();
+                } else {
                     await this.doSteps();
-                    this.showModal = true; // Otomatis buka pop-up jika sukses
+                    this.showModal = true;
                 }
             } catch (err) {
                 this.error = err.message || 'Terjadi error tidak terduga.';
@@ -647,7 +880,41 @@ function chacha20App() {
         },
 
         buildRoundList(data) {
-            this.allRounds = [ data.initial_state, ...data.round_summaries, data.final_state ].filter(Boolean);
+            // Gunakan semua round_logs agar proses ARX (quarter round) bisa dilihat step-by-step
+            
+            // --- DIFFUSION TRACKING LOGIC ---
+            let currentCellColors = Array(16).fill().map((_, i) => {
+                if (i < 4) return new Set(['constant']);
+                if (i < 12) return new Set(['key']);
+                if (i === 12) return new Set(['counter']);
+                return new Set(['nonce']);
+            });
+
+            this.initialCellColors = currentCellColors.map(s => Array.from(s));
+
+            this.allRounds = data.round_logs.map(log => {
+                if (!log.state_words && log.state_matrix) {
+                    log.state_words = log.state_matrix.flat();
+                }
+                
+                // Hitung persebaran warna (diffusion) berdasarkan operasi ARX
+                if (log.type === 'quarter_round_detail' && log.indices) {
+                    let {a, b, c, d} = log.indices;
+                    // a += b
+                    currentCellColors[b].forEach(color => currentCellColors[a].add(color));
+                    // d ^= a
+                    currentCellColors[a].forEach(color => currentCellColors[d].add(color));
+                    // c += d
+                    currentCellColors[d].forEach(color => currentCellColors[c].add(color));
+                    // b ^= c
+                    currentCellColors[c].forEach(color => currentCellColors[b].add(color));
+                }
+
+                // Simpan snapshot warna untuk ronde ini
+                log.cellColors = currentCellColors.map(s => Array.from(s));
+
+                return log;
+            });
             this.currentRoundIndex = 0;
             this.displayRound(0);
         },
@@ -659,6 +926,16 @@ function chacha20App() {
             this.currentRound = entry.round;
             this.currentStateWords = entry.state_words ?? [];
             this.currentRoundLabel = entry.description ?? 'State Initialization';
+
+            if (this.currentRound === -1) {
+                this.currentCellColorsArray = this.initialCellColors || [];
+            } else {
+                this.currentCellColorsArray = entry.cellColors || [];
+            }
+
+            // Populate ARX micro-steps for quarter_round_detail entries
+            this.currentMicroSteps = entry.arx_micro_steps || [];
+            this.microStepIdx = 0;
 
             if (idx > 0) {
                 const prev = this.allRounds[idx - 1].state_words ?? [];
@@ -681,13 +958,30 @@ function chacha20App() {
             if (this.currentRoundIndex < this.allRounds.length - 1) { this.currentRoundIndex++; this.displayRound(this.currentRoundIndex); }
         },
 
+        // --- ARX Micro-Step Methods ---
+        currentMicroOp() {
+            return this.currentMicroSteps[this.microStepIdx]?.op || 'ADD';
+        },
+        getMicroStepGroupLabel() {
+            const idx = this.microStepIdx;
+            const group = Math.floor(idx / 3) + 1;
+            return `(Grup ${group}/4)`;
+        },
+        prevMicroStep() {
+            if (this.microStepIdx > 0) this.microStepIdx--;
+        },
+        nextMicroStep() {
+            if (this.microStepIdx < this.currentMicroSteps.length - 1) this.microStepIdx++;
+        },
+
         // --- Educational Storytelling Logic ---
         getStoryTitle() {
             if (this.currentRound === -1) return "Langkah 1: Inisialisasi Matrix";
             if (this.currentRound === 'final') return "Langkah Terakhir: Penjumlahan Akhir";
             const type = this.allRounds[this.currentRoundIndex]?.type;
-            if (type === 'column') return `Ronde ${this.currentRound}: Column Round`;
-            return `Ronde ${this.currentRound}: Diagonal Round`;
+            if (type === 'quarter_round_detail') return `Operasi ARX (Ronde ${this.currentRound})`;
+            if (type === 'column') return `Ronde ${this.currentRound}: Selesai Column Round`;
+            return `Ronde ${this.currentRound}: Selesai Diagonal Round`;
         },
 
         getStoryText() {
@@ -696,9 +990,9 @@ function chacha20App() {
                     <p>Matriks 4x4 (16 kata, 32-bit) ini adalah inti dari ChaCha20. Perhatikan susunannya:</p>
                     <ul style="margin-left: 20px; margin-top: 10px;">
                         <li><span style="color:#888; font-weight:bold;">Baris 1 (Garis Abu-abu):</span> Konstanta statis <em>"expand 32-byte k"</em>.</li>
-                        <li><span style="color:#46d369; font-weight:bold;">Baris 2 & 3 (Garis Hijau):</span> Secret Key Anda (256-bit).</li>
+                        <li><span style="color:#e50914; font-weight:bold;">Baris 2 & 3 (Garis Merah):</span> Secret Key Anda (256-bit).</li>
                         <li><span style="color:#3b82f6; font-weight:bold;">Sel 12 (Garis Biru):</span> Block Counter.</li>
-                        <li><span style="color:#f59e0b; font-weight:bold;">Sel 13-15 (Garis Oranye):</span> Nonce (96-bit).</li>
+                        <li><span style="color:#46d369; font-weight:bold;">Sel 13-15 (Garis Hijau):</span> Nonce (96-bit).</li>
                     </ul>
                     <p style="margin-top: 10px;">Tekan tombol <strong>Maju</strong> untuk mulai mengacak matriks ini!</p>
                 `;
@@ -710,15 +1004,24 @@ function chacha20App() {
                 `;
             }
             const type = this.allRounds[this.currentRoundIndex]?.type;
+            
+            if (type === 'quarter_round_detail') {
+                const entry = this.allRounds[this.currentRoundIndex];
+                const indices = entry.indices;
+                return `
+                    <p>Quarter Round sedang berjalan secara spesifik pada 4 sel: <strong>[${indices.a}], [${indices.b}], [${indices.c}], [${indices.d}]</strong>.</p>
+                    <p style="margin-top: 10px;">Perhatikan keempat sel yang menyala terang di sebelah kiri! Angka di dalamnya sedang ditambahkan (Add), digeser bit-nya (Rotate), dan di-XOR secara silang sehingga nilainya berubah drastis.</p>
+                `;
+            }
             if (type === 'column') {
                 return `
-                    <p>Dalam <strong>Column Round</strong>, algoritma mengacak nilai-nilai secara vertikal.</p>
-                    <p style="margin-top: 10px;">Kolom 1, 2, 3, dan 4 diproses satu per satu secara independen menggunakan rumus ARX untuk menyebarkan bit-bit kunci ke seluruh matriks.</p>
+                    <p><strong>Column Round</strong> selesai dieksekusi.</p>
+                    <p style="margin-top: 10px;">Sebanyak 4 operasi Quarter Round baru saja selesai mengacak nilai-nilai secara vertikal pada kolom matriks.</p>
                 `;
             }
             return `
-                <p>Dalam <strong>Diagonal Round</strong>, algoritma menyilang pengacakannya secara diagonal (miring).</p>
-                <p style="margin-top: 10px;">Ini memastikan bahwa perubahan pada satu kolom akan segera memengaruhi kolom-kolom lainnya, mencapai apa yang disebut efek <em>Diffusion</em> (penyebaran) yang kuat dalam kriptografi.</p>
+                <p><strong>Diagonal Round</strong> selesai dieksekusi.</p>
+                <p style="margin-top: 10px;">Sebanyak 4 operasi Quarter Round baru saja selesai menyilang pengacakannya secara diagonal (miring) untuk menciptakan efek <em>Diffusion</em>.</p>
             `;
         },
 
@@ -734,6 +1037,121 @@ function chacha20App() {
                 throw new Error(data.message || data.error || 'API Error');
             }
             return data;
+        },
+
+        // ── File Handling Methods ──
+
+        handleFileDrop(e) {
+            const files = e.dataTransfer?.files;
+            if (files && files.length > 0) this.setFile(files[0]);
+        },
+
+        handleFileSelect(e) {
+            const files = e.target?.files;
+            if (files && files.length > 0) this.setFile(files[0]);
+        },
+
+        setFile(file) {
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                this.error = `File terlalu besar (${this.formatFileSize(file.size)}). Maksimal 5 MB.`;
+                return;
+            }
+            this.selectedFile = file;
+            this.error = null;
+            this.fileResult = null;
+        },
+
+        removeFile() {
+            this.selectedFile = null;
+            this.fileResult = null;
+        },
+
+        async doFileEncrypt() {
+            if (!this.selectedFile) throw new Error('Pilih file terlebih dahulu.');
+
+            const formData = new FormData();
+            formData.append('file', this.selectedFile);
+            formData.append('counter', parseInt(this.counter) || 1);
+            if (this.key) formData.append('key', this.key);
+            if (this.nonce) formData.append('nonce', this.nonce);
+
+            const res = await fetch('{{ route("chacha20.encrypt-file") }}', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                if (data.errors) throw new Error(Object.values(data.errors).flat().join(' '));
+                throw new Error(data.message || 'Gagal mengenkripsi file.');
+            }
+
+            this.fileResult = data;
+            this.key = data.key_hex;
+            this.nonce = data.nonce_hex;
+        },
+
+        async doFileDecrypt() {
+            if (!this.selectedFile) throw new Error('Pilih file terlebih dahulu.');
+            if (!this.key) throw new Error('Secret Key wajib diisi untuk dekripsi file.');
+            if (!this.nonce) throw new Error('Nonce wajib diisi untuk dekripsi file.');
+
+            const formData = new FormData();
+            formData.append('file', this.selectedFile);
+            formData.append('key', this.key);
+            formData.append('nonce', this.nonce);
+            formData.append('counter', parseInt(this.counter) || 1);
+
+            const res = await fetch('{{ route("chacha20.decrypt-file") }}', {
+                method: 'POST',
+                headers: { 'X-CSRF-TOKEN': this.csrfToken, 'Accept': 'application/json' },
+                body: formData,
+            });
+            const data = await res.json();
+            if (!res.ok) {
+                if (data.errors) throw new Error(Object.values(data.errors).flat().join(' '));
+                throw new Error(data.message || 'Gagal mendekripsi file.');
+            }
+
+            this.fileResult = data;
+        },
+
+        downloadFileResult() {
+            if (!this.fileResult?.file_base64) return;
+
+            const byteChars = atob(this.fileResult.file_base64);
+            const byteArray = new Uint8Array(byteChars.length);
+            for (let i = 0; i < byteChars.length; i++) {
+                byteArray[i] = byteChars.charCodeAt(i);
+            }
+
+            const blob = new Blob([byteArray], { type: 'application/octet-stream' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = this.fileResult.result_filename || 'result';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        },
+
+        copyFileKeys() {
+            if (!this.fileResult) return;
+            const text = `Key: ${this.fileResult.key_hex}\nNonce: ${this.fileResult.nonce_hex}`;
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Key & Nonce berhasil disalin ke clipboard!');
+            });
+        },
+
+        formatFileSize(bytes) {
+            if (!bytes) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let i = 0;
+            let size = bytes;
+            while (size >= 1024 && i < units.length - 1) { size /= 1024; i++; }
+            return size.toFixed(i > 0 ? 2 : 0) + ' ' + units[i];
         },
     };
 }

@@ -6,11 +6,12 @@ Aplikasi web yang memungkinkan pengguna mengenkripsi dan mendekripsi pesan mengg
 
 ## ✨ Fitur
 
-- **ChaCha20 Stream Cipher** — Implementasi murni Python sesuai [RFC 8439](https://datatracker.ietf.org/doc/html/rfc8439), tanpa library kriptografi eksternal
-- **Caesar Cipher** — Algoritma substitusi klasik *(coming soon — tim 2)*
-- **Visualisasi State Matrix** — Lihat perubahan state matrix 4×4 di setiap ronde (20 ronde, 80 quarter-rounds)
-- **Key & Nonce Generator** — Generate key 256-bit dan nonce 96-bit secara acak menggunakan CSPRNG
-- **Enkripsi & Dekripsi** — UI interaktif untuk encrypt/decrypt pesan secara real-time
+- **ChaCha20 Stream Cipher** — Implementasi murni Python sesuai [RFC 8439](https://datatracker.ietf.org/doc/html/rfc8439), tanpa library kriptografi eksternal.
+- **Caesar Cipher** — Algoritma substitusi klasik *(coming soon — tim 2)*.
+- **Visualisasi Edukatif Interaktif (Floating Pop-up)** — Lihat modifikasi state matrix 4x4 secara interaktif dengan penjelasan step-by-step per ronde mengenai operasi ARX (Addition, Rotation, XOR).
+- **Desain UI Premium (Netflix Glassmorphism)** — Antarmuka pengguna sinematik 3-kolom bergaya *pipeline* (Input ➜ Proses ➜ Output) yang modern, estetik, dan *user-friendly*.
+- **Key & Nonce Generator** — Generate key 256-bit dan nonce 96-bit secara acak menggunakan CSPRNG.
+- **Enkripsi & Dekripsi** — Form interaktif untuk encrypt/decrypt pesan secara real-time.
 
 ## 🏗️ Arsitektur
 
@@ -35,7 +36,7 @@ Aplikasi web yang memungkinkan pengguna mengenkripsi dan mendekripsi pesan mengg
 
 | Layer | Teknologi | Fungsi |
 |-------|-----------|--------|
-| Frontend | Alpine.js, Vanilla CSS | UI interaktif, visualisasi state matrix |
+| Frontend | Alpine.js, Vanilla CSS | UI/UX sinematik (Glassmorphism), layout pipeline 3-kolom, visualisasi matrix edukatif (modal interaktif) |
 | API Gateway | Laravel 12, PHP 8.3 | Validasi input, routing, error handling |
 | Crypto Engine | Python 3.11, FastAPI | Eksekusi algoritma ChaCha20 (pure, no external crypto libs) |
 

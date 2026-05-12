@@ -186,6 +186,51 @@ class ChaCha20Service
     }
 
     // ─────────────────────────────────────────────
+    //  File Encrypt / Decrypt
+    // ─────────────────────────────────────────────
+
+    /**
+     * Enkripsi file menggunakan ChaCha20.
+     *
+     * Mengirim file ke Python via multipart/form-data.
+     * Key dan nonce dikembalikan via response headers.
+     *
+     * @param  \Illuminate\Http\UploadedFile  $file
+     * @param  string|null  $key    64 hex chars (256-bit). Auto-generate jika null.
+     * @param  string|null  $nonce  24 hex chars (96-bit). Auto-generate jika null.
+     * @param  int          $counter
+     * @return array{content: string, key_hex: string, nonce_hex: string, original_filename: string, encrypted_filename: string, file_size: int, encrypted_size: int}
+     * @throws ChaCha20Exception
+     */
+    public function encryptFile(
+        \Illuminate\Http\UploadedFile $file,
+        ?string $key = null,
+        ?string $nonce = null,
+        int $counter = 1
+    ): array {
+        return $this->postFile('/encrypt-file', $file, $key, $nonce, $counter);
+    }
+
+    /**
+     * Dekripsi file menggunakan ChaCha20.
+     *
+     * @param  \Illuminate\Http\UploadedFile  $file
+     * @param  string  $key    64 hex chars (256-bit)
+     * @param  string  $nonce  24 hex chars (96-bit)
+     * @param  int     $counter
+     * @return array{content: string, original_filename: string, decrypted_filename: string, file_size: int}
+     * @throws ChaCha20Exception
+     */
+    public function decryptFile(
+        \Illuminate\Http\UploadedFile $file,
+        string $key,
+        string $nonce,
+        int $counter = 1
+    ): array {
+        return $this->postFile('/decrypt-file', $file, $key, $nonce, $counter);
+    }
+
+    // ─────────────────────────────────────────────
     //  HTTP Helpers
     // ─────────────────────────────────────────────
 
@@ -225,6 +270,77 @@ class ChaCha20Service
                 ->post($this->baseUrl . $path, $payload);
 
             return $this->handleResponse($response, $path);
+        } catch (ConnectionException $e) {
+            Log::error("ChaCha20Service: Cannot connect to microservice", [
+                'url'   => $this->baseUrl . $path,
+                'error' => $e->getMessage(),
+            ]);
+            throw new ChaCha20Exception(
+                "Tidak bisa terhubung ke ChaCha20 microservice. Pastikan service Python sedang berjalan.",
+                code: 503,
+                previous: $e
+            );
+        }
+    }
+
+    /**
+     * Send a file to the Python microservice via multipart/form-data.
+     *
+     * @throws ChaCha20Exception
+     */
+    private function postFile(
+        string $path,
+        \Illuminate\Http\UploadedFile $file,
+        ?string $key,
+        ?string $nonce,
+        int $counter
+    ): array {
+        try {
+            $request = Http::timeout($this->timeout)
+                ->attach('file', $file->getContent(), $file->getClientOriginalName());
+
+            // Add form fields
+            $formData = ['counter' => $counter];
+            if ($key !== null) {
+                $formData['key'] = $key;
+            }
+            if ($nonce !== null) {
+                $formData['nonce'] = $nonce;
+            }
+
+            $response = $request->post($this->baseUrl . $path, $formData);
+
+            if (!$response->successful()) {
+                $body = $response->json() ?? [];
+                $detail = $body['detail'] ?? 'Unknown error from microservice';
+
+                Log::warning("ChaCha20Service: File API error", [
+                    'path'   => $path,
+                    'status' => $response->status(),
+                    'body'   => $body,
+                ]);
+
+                throw new ChaCha20Exception(
+                    is_string($detail) ? $detail : json_encode($detail),
+                    apiError: $body,
+                    code: $response->status()
+                );
+            }
+
+            // Extract metadata from response headers
+            $contentDisposition = $response->header('Content-Disposition') ?? '';
+            preg_match('/filename="?([^"]+)"?/', $contentDisposition, $matches);
+            $resultFilename = $matches[1] ?? 'result_file';
+
+            return [
+                'content'            => $response->body(),
+                'key_hex'            => $response->header('X-Key-Hex') ?? '',
+                'nonce_hex'          => $response->header('X-Nonce-Hex') ?? '',
+                'original_filename'  => $response->header('X-Original-Filename') ?? $file->getClientOriginalName(),
+                'result_filename'    => $resultFilename,
+                'file_size'          => (int) ($response->header('X-File-Size') ?? strlen($response->body())),
+                'content_length'     => strlen($response->body()),
+            ];
         } catch (ConnectionException $e) {
             Log::error("ChaCha20Service: Cannot connect to microservice", [
                 'url'   => $this->baseUrl . $path,

@@ -84,6 +84,7 @@ class StepLogger:
         qr_label: str,
         state: list[int],
         a: int, b: int, c: int, d: int,
+        arx_micro_steps: list[dict] | None = None,
     ):
         self.entries.append({
             "round": round_num,
@@ -97,6 +98,7 @@ class StepLogger:
                 f"state[{d}]": f"0x{state[d]:08x}",
             },
             "state_matrix": self._to_matrix(state),
+            "arx_micro_steps": arx_micro_steps or [],
         })
 
     @staticmethod
@@ -109,6 +111,67 @@ class StepLogger:
 
     def to_list(self) -> list[dict]:
         return self.entries
+
+
+# ─────────────────────────────────────────────
+#  ARX Micro-Step Helpers
+# ─────────────────────────────────────────────
+
+def _fmt(v: int) -> str:
+    """Format a 32-bit int as 0x-prefixed hex."""
+    return f"0x{v:08x}"
+
+def _bin32(v: int) -> str:
+    """Format a 32-bit int as a 32-char binary string."""
+    return f"{v:032b}"
+
+def _record_add(target_label: str, src_label: str,
+                target_idx: int, src_idx: int,
+                val_before: int, src_val: int, val_after: int) -> dict:
+    return {
+        "op": "ADD",
+        "symbol": "+",
+        "description": f"{target_label} += {src_label}",
+        "target_idx": target_idx,
+        "source_idx": src_idx,
+        "operand1_hex": _fmt(val_before),
+        "operand1_bin": _bin32(val_before),
+        "operand2_hex": _fmt(src_val),
+        "operand2_bin": _bin32(src_val),
+        "result_hex": _fmt(val_after),
+        "result_bin": _bin32(val_after),
+    }
+
+def _record_xor(target_label: str, src_label: str,
+                target_idx: int, src_idx: int,
+                val_before: int, src_val: int, val_after: int) -> dict:
+    return {
+        "op": "XOR",
+        "symbol": "⊕",
+        "description": f"{target_label} ^= {src_label}",
+        "target_idx": target_idx,
+        "source_idx": src_idx,
+        "operand1_hex": _fmt(val_before),
+        "operand1_bin": _bin32(val_before),
+        "operand2_hex": _fmt(src_val),
+        "operand2_bin": _bin32(src_val),
+        "result_hex": _fmt(val_after),
+        "result_bin": _bin32(val_after),
+    }
+
+def _record_rot(target_label: str, target_idx: int,
+                val_before: int, val_after: int, shift: int) -> dict:
+    return {
+        "op": "ROT",
+        "symbol": f"<<<",
+        "description": f"{target_label} <<<= {shift}",
+        "target_idx": target_idx,
+        "shift": shift,
+        "operand1_hex": _fmt(val_before),
+        "operand1_bin": _bin32(val_before),
+        "result_hex": _fmt(val_after),
+        "result_bin": _bin32(val_after),
+    }
 
 
 # ─────────────────────────────────────────────
@@ -131,28 +194,66 @@ def quarter_round(
         a += b; d ^= a; d <<<= 8
         c += d; b ^= c; b <<<= 7
     """
+    micro = [] if logger else None
+
     # Step 1: a += b; d ^= a; d <<<= 16
+    before_a = state[a]
     state[a] = _add32(state[a], state[b])
+    if micro is not None:
+        micro.append(_record_add(f"a[{a}]", f"b[{b}]", a, b, before_a, state[b], state[a]))
+    before_d = state[d]
     state[d] ^= state[a]
+    if micro is not None:
+        micro.append(_record_xor(f"d[{d}]", f"a[{a}]", d, a, before_d, state[a], state[d]))
+    before_d = state[d]
     state[d] = _rotl32(state[d], 16)
+    if micro is not None:
+        micro.append(_record_rot(f"d[{d}]", d, before_d, state[d], 16))
 
     # Step 2: c += d; b ^= c; b <<<= 12
+    before_c = state[c]
     state[c] = _add32(state[c], state[d])
+    if micro is not None:
+        micro.append(_record_add(f"c[{c}]", f"d[{d}]", c, d, before_c, state[d], state[c]))
+    before_b = state[b]
     state[b] ^= state[c]
+    if micro is not None:
+        micro.append(_record_xor(f"b[{b}]", f"c[{c}]", b, c, before_b, state[c], state[b]))
+    before_b = state[b]
     state[b] = _rotl32(state[b], 12)
+    if micro is not None:
+        micro.append(_record_rot(f"b[{b}]", b, before_b, state[b], 12))
 
     # Step 3: a += b; d ^= a; d <<<= 8
+    before_a = state[a]
     state[a] = _add32(state[a], state[b])
+    if micro is not None:
+        micro.append(_record_add(f"a[{a}]", f"b[{b}]", a, b, before_a, state[b], state[a]))
+    before_d = state[d]
     state[d] ^= state[a]
+    if micro is not None:
+        micro.append(_record_xor(f"d[{d}]", f"a[{a}]", d, a, before_d, state[a], state[d]))
+    before_d = state[d]
     state[d] = _rotl32(state[d], 8)
+    if micro is not None:
+        micro.append(_record_rot(f"d[{d}]", d, before_d, state[d], 8))
 
     # Step 4: c += d; b ^= c; b <<<= 7
+    before_c = state[c]
     state[c] = _add32(state[c], state[d])
+    if micro is not None:
+        micro.append(_record_add(f"c[{c}]", f"d[{d}]", c, d, before_c, state[d], state[c]))
+    before_b = state[b]
     state[b] ^= state[c]
+    if micro is not None:
+        micro.append(_record_xor(f"b[{b}]", f"c[{c}]", b, c, before_b, state[c], state[b]))
+    before_b = state[b]
     state[b] = _rotl32(state[b], 7)
+    if micro is not None:
+        micro.append(_record_rot(f"b[{b}]", b, before_b, state[b], 7))
 
     if logger:
-        logger.log_quarter_round(round_num, qr_label, state, a, b, c, d)
+        logger.log_quarter_round(round_num, qr_label, state, a, b, c, d, micro)
 
 
 # ─────────────────────────────────────────────

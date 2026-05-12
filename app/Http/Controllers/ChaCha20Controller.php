@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Exceptions\ChaCha20Exception;
 use App\Http\Requests\ChaCha20DecryptRequest;
 use App\Http\Requests\ChaCha20EncryptRequest;
+use App\Http\Requests\ChaCha20FileEncryptRequest;
+use App\Http\Requests\ChaCha20FileDecryptRequest;
 use App\Http\Requests\ChaCha20StepsRequest;
 use App\Services\ChaCha20Service;
 use Illuminate\Http\JsonResponse;
@@ -146,6 +148,69 @@ class ChaCha20Controller extends Controller
             );
 
             return response()->json($result);
+        } catch (ChaCha20Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    // ─────────────────────────────────────────────
+    //  File Encrypt / Decrypt
+    // ─────────────────────────────────────────────
+
+    /**
+     * POST /chacha20/encrypt-file
+     * Enkripsi file dengan ChaCha20.
+     *
+     * Menerima multipart/form-data, mengembalikan JSON dengan
+     * metadata + file content sebagai base64.
+     */
+    public function encryptFile(ChaCha20FileEncryptRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->chacha20->encryptFile(
+                file:    $request->file('file'),
+                key:     $request->input('key'),
+                nonce:   $request->input('nonce'),
+                counter: (int) $request->input('counter', 1),
+            );
+
+            return response()->json([
+                'success'          => true,
+                'result_filename'  => $result['result_filename'],
+                'original_filename'=> $result['original_filename'],
+                'key_hex'          => $result['key_hex'],
+                'nonce_hex'        => $result['nonce_hex'],
+                'file_size'        => $result['file_size'],
+                'content_length'   => $result['content_length'],
+                'file_base64'      => base64_encode($result['content']),
+            ]);
+        } catch (ChaCha20Exception $e) {
+            return $this->errorResponse($e);
+        }
+    }
+
+    /**
+     * POST /chacha20/decrypt-file
+     * Dekripsi file dengan ChaCha20.
+     */
+    public function decryptFile(ChaCha20FileDecryptRequest $request): JsonResponse
+    {
+        try {
+            $result = $this->chacha20->decryptFile(
+                file:    $request->file('file'),
+                key:     $request->input('key'),
+                nonce:   $request->input('nonce'),
+                counter: (int) $request->input('counter', 1),
+            );
+
+            return response()->json([
+                'success'          => true,
+                'result_filename'  => $result['result_filename'],
+                'original_filename'=> $result['original_filename'],
+                'file_size'        => $result['file_size'],
+                'content_length'   => $result['content_length'],
+                'file_base64'      => base64_encode($result['content']),
+            ]);
         } catch (ChaCha20Exception $e) {
             return $this->errorResponse($e);
         }
