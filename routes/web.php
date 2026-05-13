@@ -1,21 +1,20 @@
 <?php
 
+use App\Http\Controllers\SimulatorController;
 use App\Http\Controllers\ChaCha20Controller;
 use App\Http\Controllers\CaesarController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn () => redirect()->route('chacha20.index'));
+// Unified Routes
+Route::get('/', [SimulatorController::class, 'index'])->name('simulator.index');
+Route::view('/learn', 'simulator.learn')->name('simulator.learn');
 
 // ─────────────────────────────────────────────
 //  ChaCha20 Simulator
 // ─────────────────────────────────────────────
 Route::prefix('chacha20')->name('chacha20.')->group(function () {
 
-    // Halaman simulator (Blade view)
-    Route::get('/', [ChaCha20Controller::class, 'index'])->name('index');
-    
-    // Halaman Edukasi "Kisah ChaCha20"
-    Route::view('/learn', 'chacha20.learn')->name('learn');
+    // API endpoints (Halaman simulator utama ada di '/')
 
     // JSON endpoints — dikonsumsi Alpine.js di frontend
     Route::get('/keygen',   [ChaCha20Controller::class, 'keygen'])->name('keygen');
@@ -36,8 +35,7 @@ Route::prefix('chacha20')->name('chacha20.')->group(function () {
 // ─────────────────────────────────────────────
 Route::prefix('caesar')->name('caesar.')->group(function () {
 
-    // Halaman simulator (Blade view)
-    Route::get('/', [CaesarController::class, 'index'])->name('index');
+    // API endpoints
 
     // JSON endpoints
     Route::post('/encrypt',     [CaesarController::class, 'encrypt'])->name('encrypt');
