@@ -8,38 +8,33 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="//unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <style>
-        /* Base Variables */
+        /* Base Variables - SaaS Dashboard V2 */
         :root {
-            --bg-base: #0B0B0C;
-            --text-main: #FFFFFF;
-            --text-muted: #B3B3B3;
-            --border-glass: rgba(255, 255, 255, 0.1);
-            --bg-glass: rgba(20, 20, 20, 0.45);
-            --radius: 12px;
+            --bg-base: #0F172A;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-glass: #334155;
+            --bg-glass: #1E293B;
+            --radius: 8px;
             --font-main: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --transition-speed: 0.5s;
+            --transition-speed: 0.3s;
         }
 
-        /* ChaCha20 Theme (Red) */
+        /* ChaCha20 Theme (Indigo) */
         body.theme-chacha20 {
-            --primary: #E50914;
-            --primary-hover: #F40612;
-            --primary-rgb: 229, 9, 20;
-            --orb-1-color: #E50914;
-            --orb-2-color: #660099;
-            --orb-3-color: #0044ff;
+            --primary: #6366F1;
+            --primary-hover: #4F46E5;
+            --primary-rgb: 99, 102, 241;
         }
 
-        /* Caesar Theme (Gold/Yellow) */
+        /* Caesar Theme (Teal) */
         body.theme-caesar {
-            --primary: #f59e0b;
-            --primary-hover: #fbbf24;
-            --primary-rgb: 245, 158, 11;
-            --orb-1-color: #f59e0b;
-            --orb-2-color: #7c3aed;
-            --orb-3-color: #06b6d4;
+            --primary: #0D9488;
+            --primary-hover: #0F766E;
+            --primary-rgb: 13, 148, 136;
         }
 
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -48,32 +43,13 @@
             background-color: var(--bg-base);
             color: var(--text-main);
             font-family: var(--font-main);
-            font-size: 15px;
+            font-size: 14px;
             min-height: 100vh;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             position: relative;
             transition: --primary var(--transition-speed), --primary-hover var(--transition-speed);
-        }
-
-        /* Ambient Animated Background Orbs */
-        .bg-orbs {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; overflow: hidden;
-        }
-        .orb {
-            position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.4;
-            animation: float 20s infinite ease-in-out alternate;
-            transition: background-color var(--transition-speed);
-        }
-        .orb-1 { width: 500px; height: 500px; background: var(--orb-1-color); top: -100px; left: -100px; animation-delay: 0s; }
-        .orb-2 { width: 400px; height: 400px; background: var(--orb-2-color); bottom: 10%; right: -50px; animation-delay: -5s; }
-        .orb-3 { width: 300px; height: 300px; background: var(--orb-3-color); top: 40%; left: 40%; animation-delay: -10s; opacity: 0.2; }
-        
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(100px, 50px) scale(1.1); }
-            100% { transform: translate(-50px, 100px) scale(0.9); }
         }
 
         /* Nav & Hero */
@@ -102,46 +78,33 @@
 
         /* Pipeline Layout Grid */
         .pipeline-layout {
-            display: grid; grid-template-columns: 1fr; gap: 20px; align-items: stretch;
+            display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start;
         }
         @media (min-width: 1024px) {
-            .pipeline-layout { grid-template-columns: 2.5fr 40px 3fr 40px 3.5fr; }
+            .pipeline-layout { grid-template-columns: 1.2fr 1fr; }
         }
-        .column-block { display: flex; flex-direction: column; min-width: 0; }
+        .column-block { display: flex; flex-direction: column; min-width: 0; gap: 24px; }
 
-        /* Pipeline Divider */
-        .pipeline-divider { display: none; align-items: center; justify-content: center; }
-        @media (min-width: 1024px) { .pipeline-divider { display: flex; } }
-        .chevron-right {
-            width: 24px; height: 24px; border-top: 4px solid var(--primary); border-right: 4px solid var(--primary);
-            transform: rotate(45deg); opacity: 0.6; margin-top: -60px;
-            transition: border-color var(--transition-speed);
-        }
-
-        /* Glass Card */
+        /* Solid Card */
         .card {
             background-color: var(--bg-glass);
-            backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius); padding: 24px; margin-bottom: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+            border-radius: var(--radius); padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border-glass);
         }
-        .card.h-full { flex: 1; margin-bottom: 0; }
+        .card.h-full { flex: 1; }
         
         .card-header-banner {
-            background: rgba(var(--primary-rgb), 0.85); color: white;
-            padding: 12px 20px; margin: -24px -24px 24px -24px;
-            border-top-left-radius: var(--radius); border-top-right-radius: var(--radius);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px; margin-bottom: 20px;
             font-size: 1.1rem; font-weight: 600; letter-spacing: 0.5px;
-            display: flex; align-items: center; gap: 12px;
-            box-shadow: 0 2px 10px rgba(var(--primary-rgb), 0.3);
-            transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+            display: flex; align-items: center; gap: 10px; color: var(--text-main);
         }
-        .card-header-banner.muted { background: rgba(40,40,40,0.8); color: var(--text-main); box-shadow: none; }
+        .card-header-banner.muted { border-bottom-color: var(--border-glass); }
         .card-header-icon {
             display: inline-flex; justify-content: center; align-items: center;
-            width: 24px; height: 24px; border: 2px solid currentColor; border-radius: 50%;
-            font-size: 14px; font-weight: bold;
+            width: 24px; height: 24px; background: rgba(255,255,255,0.1); border-radius: 6px;
+            font-size: 12px; font-weight: bold; color: var(--text-muted);
         }
 
         /* Form */
@@ -167,7 +130,7 @@
             transition: all 0.2s; font-family: var(--font-main);
         }
         select option { background: var(--bg-base); color: var(--text-main); }
-        input.mono-font, textarea.mono-font { font-family: 'Courier New', Courier, monospace; }
+        input.mono-font, textarea.mono-font { font-family: 'JetBrains Mono', monospace; }
         textarea { resize: vertical; min-height: 120px; line-height: 1.6; }
         textarea.full-height { min-height: calc(100% - 100px); height: 300px; }
         input[type=text]:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(var(--primary-rgb), 0.2); }
@@ -191,10 +154,11 @@
 
         /* Result Area */
         .result-box {
-            font-size: 14px; font-family: 'Courier New', Courier, monospace;
+            font-size: 14px; font-family: 'JetBrains Mono', monospace;
             background: rgba(0,0,0,0.6); border: 1px solid var(--border-glass); border-radius: 6px;
             padding: 16px; word-break: break-all; white-space: pre-wrap; color: var(--text-main);
             min-height: 100px; line-height: 1.5; margin-bottom: 16px;
+            user-select: all;
         }
         .result-box.error { border-color: var(--primary); background: rgba(var(--primary-rgb), 0.1); color: #ff6b6b; min-height: auto; }
         
@@ -234,7 +198,7 @@
         .state-cell {
             background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 6px;
             padding: 24px 8px 16px; text-align: center; color: var(--text-main);
-            font-family: 'Courier New', Courier, monospace; font-size: 14px; font-weight: bold;
+            font-family: 'JetBrains Mono', monospace; font-size: 14px; font-weight: bold;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative;
         }
         .state-cell.changed {
@@ -268,11 +232,11 @@
         .arx-step-badge.add { background: rgba(0,200,255,0.15); color: #00c8ff; border: 1px solid rgba(0,200,255,0.3); }
         .arx-step-badge.xor { background: rgba(255,100,200,0.15); color: #ff64c8; border: 1px solid rgba(255,100,200,0.3); }
         .arx-step-badge.rot { background: rgba(255,180,0,0.15); color: #ffb400; border: 1px solid rgba(255,180,0,0.3); }
-        .arx-op-desc { font-size: 13px; font-weight: 600; color: white; font-family: 'Courier New', monospace; margin-bottom: 10px; }
+        .arx-op-desc { font-size: 13px; font-weight: 600; color: white; font-family: 'JetBrains Mono', monospace; margin-bottom: 10px; }
         .arx-row { display: flex; flex-direction: column; gap: 4px; margin-bottom: 6px; }
         .arx-row-label { font-size: 11px; color: var(--text-muted); font-weight: 500; }
-        .arx-hex-val { font-family: 'Courier New', monospace; font-size: 13px; color: white; font-weight: 600; }
-        .arx-bin-row { font-family: 'Courier New', monospace; font-size: 11px; letter-spacing: 1px; word-break: break-all; padding: 4px 6px; border-radius: 4px; background: rgba(0,0,0,0.4); }
+        .arx-hex-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: white; font-weight: 600; }
+        .arx-bin-row { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1px; word-break: break-all; padding: 4px 6px; border-radius: 4px; background: rgba(0,0,0,0.4); }
         .arx-bin-row.src { color: #888; }
         .arx-bin-row.result { color: #4ade80; }
         .arx-separator { text-align: center; font-size: 16px; font-weight: 700; padding: 2px 0; }
@@ -310,7 +274,7 @@
         .btn-download:hover { background: var(--primary-hover); transform: translateY(-1px); }
         .key-display { background: rgba(0,0,0,0.4); border: 1px solid var(--border-glass); border-radius: 8px; padding: 12px 16px; margin-top: 16px; text-align: left; }
         .key-display label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 2px; }
-        .key-display .key-value { font-family: 'Courier New', monospace; font-size: 12px; word-break: break-all; color: #fbbf24; }
+        .key-display .key-value { font-family: 'JetBrains Mono', monospace; font-size: 12px; word-break: break-all; color: #fbbf24; }
         .file-sub-mode { display: flex; gap: 8px; margin-bottom: 16px; }
         .file-sub-tab { flex: 1; text-align: center; padding: 8px; font-size: 13px; font-weight: 500; border-radius: 6px; cursor: pointer; transition: all .2s; background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid transparent; }
         .file-sub-tab:hover { color: white; background: rgba(255,255,255,0.1); }
@@ -370,63 +334,59 @@
            LIGHT MODE OVERRIDES
            ================================================== */
         body.light-mode {
-            --bg-base: #F3F4F6;
-            --text-main: #111827;
-            --text-muted: #4B5563;
-            --border-glass: rgba(0, 0, 0, 0.1);
-            --bg-glass: rgba(255, 255, 255, 0.75);
+            --bg-base: #F8FAFC;
+            --text-main: #0F172A;
+            --text-muted: #475569;
+            --border-glass: #E2E8F0;
+            --bg-glass: #FFFFFF;
         }
-        body.light-mode .navbar { background: linear-gradient(to bottom, rgba(255,255,255,0.8) 0%, transparent 100%); }
-        body.light-mode .logo { text-shadow: none; color: var(--text-main); }
-        body.light-mode .status-badge { background: rgba(0,0,0,0.05); }
-        body.light-mode .card { box-shadow: 0 10px 30px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,1); }
-        body.light-mode .card-header-banner.muted { background: rgba(220, 220, 220, 0.9); color: var(--text-main); text-shadow: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        body.light-mode .mode-switcher { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .mode-tab { border-color: rgba(0,0,0,0.1); }
-        body.light-mode .mode-tab:hover { background: rgba(0,0,0,0.05); color: var(--text-main); }
-        body.light-mode input[type=text], body.light-mode textarea, body.light-mode select { background: rgba(255,255,255,0.8); color: var(--text-main); border-color: rgba(0,0,0,0.2); }
-        body.light-mode input[type=text]:focus, body.light-mode textarea:focus, body.light-mode select:focus { background: #fff; box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.1); }
-        body.light-mode .result-box { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.15); }
+        body.light-mode .status-badge { background: #F1F5F9; border-color: #E2E8F0; }
+        body.light-mode .mode-switcher { background: #F1F5F9; border-color: #E2E8F0; }
+        body.light-mode .mode-tab { border-color: #E2E8F0; }
+        body.light-mode .mode-tab:hover { background: #E2E8F0; color: var(--text-main); }
+        body.light-mode input[type=text], body.light-mode textarea, body.light-mode select { background: #FFFFFF; color: var(--text-main); border-color: #CBD5E1; }
+        body.light-mode input[type=text]:focus, body.light-mode textarea:focus, body.light-mode select:focus { background: #fff; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.2); }
+        body.light-mode .result-box { background: #F8FAFC; border-color: #E2E8F0; }
         body.light-mode .result-box.error { background: rgba(var(--primary-rgb), 0.05); }
-        body.light-mode .drop-zone { background: rgba(255,255,255,0.5); border-color: rgba(0,0,0,0.15); }
+        body.light-mode .drop-zone { background: #F8FAFC; border-color: #CBD5E1; }
         body.light-mode .drop-zone:hover, body.light-mode .drop-zone.dragover { background: rgba(var(--primary-rgb),0.05); border-color: var(--primary); }
-        body.light-mode .file-info-card { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.15); }
-        body.light-mode .key-display { background: rgba(255,255,255,0.7); border-color: rgba(0,0,0,0.15); }
-        body.light-mode .file-sub-tab { background: rgba(0,0,0,0.03); color: var(--text-muted); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .file-sub-tab:hover { background: rgba(0,0,0,0.08); color: var(--text-main); }
+        body.light-mode .file-info-card { background: #FFFFFF; border-color: #E2E8F0; }
+        body.light-mode .key-display { background: #F8FAFC; border-color: #E2E8F0; }
+        body.light-mode .file-sub-tab { background: #F1F5F9; color: var(--text-muted); border-color: transparent; }
+        body.light-mode .file-sub-tab:hover { background: #E2E8F0; color: var(--text-main); }
         body.light-mode .file-sub-tab.active { background: rgba(var(--primary-rgb),0.1); color: var(--primary); border-color: var(--primary); }
-        body.light-mode .btn-outline { border-color: rgba(0,0,0,0.2); color: var(--text-main); }
-        body.light-mode .btn-outline:not(:disabled):hover { background: rgba(0,0,0,0.05); }
-        body.light-mode .modal-overlay { background: rgba(255,255,255,0.85); }
-        body.light-mode .modal-content { background: rgba(245, 245, 245, 0.95); box-shadow: 0 20px 50px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,1); }
-        body.light-mode .modal-header { background: rgba(255,255,255,0.5); border-bottom-color: rgba(0,0,0,0.1); }
+        body.light-mode .btn-outline { border-color: #CBD5E1; color: var(--text-main); }
+        body.light-mode .btn-outline:not(:disabled):hover { background: #F1F5F9; }
+        body.light-mode .modal-overlay { background: rgba(255,255,255,0.85); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        body.light-mode .modal-content { background: #FFFFFF; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); border-color: #E2E8F0; }
+        body.light-mode .modal-header { background: #F8FAFC; border-bottom-color: #E2E8F0; }
         body.light-mode .modal-close { color: var(--text-main); opacity: 0.5; }
         body.light-mode .modal-close:hover { opacity: 1; }
-        body.light-mode .matrix-container { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .state-cell { background: rgba(0,0,0,0.02); border-color: rgba(0,0,0,0.06); }
-        body.light-mode .state-cell.changed { color: white; }
-        body.light-mode .narration-panel { background: rgba(255,255,255,0.6); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .arx-box { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.1); border-left-color: var(--primary); }
-        body.light-mode .arx-micro { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .arx-micro-nav button { background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); color: var(--text-muted); }
-        body.light-mode .arx-micro-nav button:hover:not(:disabled) { background: rgba(0,0,0,0.1); color: var(--text-main); }
+        body.light-mode .matrix-container { background: #F8FAFC; border-color: #E2E8F0; }
+        body.light-mode .state-cell { background: #FFFFFF; border-color: #E2E8F0; }
+        body.light-mode .state-cell.changed { color: white; border-color: var(--primary); background-color: var(--primary); }
+        body.light-mode .narration-panel { background: #F8FAFC; border-color: #E2E8F0; }
+        body.light-mode .arx-box { background: #FFFFFF; border-color: #E2E8F0; border-left-color: var(--primary); }
+        body.light-mode .arx-micro { background: #FFFFFF; border-color: #E2E8F0; }
+        body.light-mode .arx-micro-nav button { background: #F1F5F9; border-color: #E2E8F0; color: var(--text-muted); }
+        body.light-mode .arx-micro-nav button:hover:not(:disabled) { background: #E2E8F0; color: var(--text-main); }
         body.light-mode .arx-op-desc { color: var(--text-main); }
         body.light-mode .arx-hex-val { color: var(--text-main); }
-        body.light-mode .arx-bin-row { background: rgba(0,0,0,0.04); color: #444; }
+        body.light-mode .arx-bin-row { background: #F1F5F9; color: #444; }
         body.light-mode .arx-bin-row.result { color: #059669; }
         body.light-mode .arx-row-label[style*="color: white"] { color: var(--text-main) !important; }
-        body.light-mode .arx-result-line { border-top-color: rgba(0,0,0,0.1); }
-        body.light-mode .round-dot { background: rgba(0,0,0,0.05); color: var(--text-main); }
-        body.light-mode .round-dot:hover { background: rgba(0,0,0,0.1); }
-        body.light-mode .round-dot.active { background: var(--text-main); color: var(--bg-base); border-color: var(--text-main); }
-        body.light-mode .shift-slider input[type=range] { background: rgba(0,0,0,0.1); }
-        body.light-mode .alpha-cell.original { background: rgba(0,0,0,0.05); color: var(--text-main); }
-        body.light-mode .bf-row { border-bottom-color: rgba(0,0,0,0.05); }
-        body.light-mode .bf-row:hover { background: rgba(0,0,0,0.02); }
-        body.light-mode #brute-terminal { background: rgba(245,245,245,0.9); box-shadow: inset 0 0 10px rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
-        body.light-mode .step-char { background: rgba(255,255,255,0.8); border-color: rgba(0,0,0,0.1); }
+        body.light-mode .arx-result-line { border-top-color: #E2E8F0; }
+        body.light-mode .round-dot { background: #F1F5F9; color: var(--text-main); }
+        body.light-mode .round-dot:hover { background: #E2E8F0; }
+        body.light-mode .round-dot.active { background: var(--text-main); color: #FFFFFF; border-color: var(--text-main); }
+        body.light-mode .shift-slider input[type=range] { background: #E2E8F0; }
+        body.light-mode .alpha-cell.original { background: #F1F5F9; color: var(--text-main); }
+        body.light-mode .bf-row { border-bottom-color: #E2E8F0; }
+        body.light-mode .bf-row:hover { background: #F8FAFC; }
+        body.light-mode #brute-terminal { background: #FFFFFF; box-shadow: none; border-color: #E2E8F0; }
+        body.light-mode .step-char { background: #FFFFFF; border-color: #E2E8F0; }
         body.light-mode .step-char:hover { background: rgba(var(--primary-rgb),0.05); border-color: var(--primary); }
-        body.light-mode .step-arrow { color: rgba(0,0,0,0.3); }
+        body.light-mode .step-arrow { color: #94A3B8; }
         /* Fix terminal texts */
         body.light-mode #brute-terminal div[style*="color: #e2e8f0"] { color: var(--text-main) !important; }
         body.light-mode #brute-terminal div[style*="color: white"] { color: var(--text-main) !important; }
@@ -434,13 +394,6 @@
     </style>
 </head>
 <body x-data="simulatorApp()" x-init="init()" :class="[themeClass, isLightMode ? 'light-mode' : '']" :style="(showModal && algorithm === 'chacha20') ? 'overflow: hidden;' : ''">
-
-    <!-- Ambient Background -->
-    <div class="bg-orbs">
-        <div class="orb orb-1"></div>
-        <div class="orb orb-2"></div>
-        <div class="orb orb-3"></div>
-    </div>
 
     <!-- Navbar -->
     <nav class="navbar">
@@ -521,13 +474,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <!-- DIVIDER 1 -->
-            <div class="pipeline-divider"><div class="chevron-right"></div></div>
-
-            <!-- COLUMN 2: CONFIGURATION -->
-            <div class="column-block">
                 <div class="card h-full">
                     <div class="card-header-banner">
                         <span class="card-header-icon">2</span>
@@ -654,11 +600,8 @@
                 </div>
             </div>
 
-            <!-- DIVIDER 2 -->
-            <div class="pipeline-divider"><div class="chevron-right"></div></div>
-
-            <!-- COLUMN 3: OUTPUT -->
-            <div class="column-block">
+            <!-- RIGHT COLUMN: OUTPUT -->
+            <div class="column-block" style="position: sticky; top: 100px; align-self: start;">
                 <div class="card h-full" style="display: flex; flex-direction: column;">
                     <div class="card-header-banner muted">
                         <span class="card-header-icon">3</span>
@@ -678,13 +621,19 @@
                     <div x-show="result && mode !== 'steps' && mode !== 'file' && mode !== 'brute'" style="flex-grow: 1;">
                         <template x-if="mode === 'encrypt' && result">
                             <div>
-                                <label>Ciphertext <span x-show="algorithm === 'chacha20'">(Hex)</span></label>
-                                <div class="result-box" x-text="algorithm === 'chacha20' ? result.ciphertext_hex : result.ciphertext"></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <label style="margin-bottom:0;">Ciphertext <span x-show="algorithm === 'chacha20'">(Hex)</span></label>
+                                    <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 11px;" @click="copyText(algorithm === 'chacha20' ? result.ciphertext_hex : result.ciphertext)">📋 Salin</button>
+                                </div>
+                                <div class="result-box" x-text="algorithm === 'chacha20' ? result.ciphertext_hex : result.ciphertext" title="Klik untuk menyeleksi semua teks"></div>
                                 
                                 <template x-if="algorithm === 'chacha20'">
                                     <div>
-                                        <label>Ciphertext (Base64)</label>
-                                        <div class="result-box" x-text="result.ciphertext_base64"></div>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                            <label style="margin-bottom:0;">Ciphertext (Base64)</label>
+                                            <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 11px;" @click="copyText(result.ciphertext_base64)">📋 Salin</button>
+                                        </div>
+                                        <div class="result-box" x-text="result.ciphertext_base64" title="Klik untuk menyeleksi semua teks"></div>
                                     </div>
                                 </template>
 
@@ -699,12 +648,18 @@
 
                         <template x-if="mode === 'decrypt' && result">
                             <div>
-                                <label>Plaintext Asli</label>
-                                <div class="result-box" x-text="result.plaintext" style="font-family: var(--font-main); font-size: 16px;"></div>
+                                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                                    <label style="margin-bottom:0;">Plaintext Asli</label>
+                                    <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 11px;" @click="copyText(result.plaintext)">📋 Salin</button>
+                                </div>
+                                <div class="result-box" x-text="result.plaintext" style="font-family: var(--font-main); font-size: 16px;" title="Klik untuk menyeleksi semua teks"></div>
                                 <template x-if="algorithm === 'chacha20'">
                                     <div>
-                                        <label>Plaintext (Hex)</label>
-                                        <div class="result-box" x-text="result.plaintext_hex"></div>
+                                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px; margin-top:16px;">
+                                            <label style="margin-bottom:0;">Plaintext (Hex)</label>
+                                            <button class="btn btn-outline btn-sm" style="padding: 2px 8px; font-size: 11px;" @click="copyText(result.plaintext_hex)">📋 Salin</button>
+                                        </div>
+                                        <div class="result-box" x-text="result.plaintext_hex" title="Klik untuk menyeleksi semua teks"></div>
                                     </div>
                                 </template>
                             </div>
@@ -771,7 +726,7 @@
                         <label x-show="!isBruteCracking" style="color: #4ade80;">✅ 26 Kemungkinan Ditemukan!</label>
                         <span class="educational-text">Terminal Log (Brute Force)</span>
                         
-                        <div id="brute-terminal" style="flex-grow: 1; background: rgba(0,0,0,0.8); padding: 16px; border-radius: 8px; border: 1px solid var(--border-glass); font-family: 'Courier New', Courier, monospace; overflow-y: auto; max-height: 400px; box-shadow: inset 0 0 20px rgba(0,0,0,1);">
+                        <div id="brute-terminal" style="flex-grow: 1; background: rgba(0,0,0,0.8); padding: 16px; border-radius: 8px; border: 1px solid var(--border-glass); font-family: 'JetBrains Mono', monospace; overflow-y: auto; max-height: 400px; box-shadow: inset 0 0 20px rgba(0,0,0,1);">
                             <div style="color: #4ade80; margin-bottom: 12px; font-weight: bold;">$ initiating brute-force sequence...</div>
                             <template x-for="(line, index) in bruteLines" :key="index">
                                 <div style="display: flex; gap: 12px; margin-bottom: 6px; font-size: 13px; padding: 4px; border-radius: 4px; cursor: pointer; transition: background 0.2s;"
