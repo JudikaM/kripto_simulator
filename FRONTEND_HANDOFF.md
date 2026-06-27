@@ -1,4 +1,4 @@
-# 📋 Frontend Handoff — ChaCha20 Simulator
+# Frontend Handoff — ChaCha20 Simulator
 
 > **Dokumen ini untuk tim frontend.**
 > Berisi semua informasi yang diperlukan untuk membangun UI yang berkomunikasi dengan backend ChaCha20 Simulator.
