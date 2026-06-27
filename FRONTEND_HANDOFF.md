@@ -5,7 +5,7 @@
 
 ---
 
-## 🏗️ Arsitektur Sistem
+## Arsitektur Sistem
 
 ```
 ┌──────────────────┐     HTTP JSON      ┌──────────────────┐     HTTP JSON     ┌──────────────────┐
